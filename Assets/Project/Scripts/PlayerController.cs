@@ -32,6 +32,11 @@ public class PlayerController : MonoBehaviour
         transform.Translate(Vector2.left * speed * Time.deltaTime);
     }
 
+    private void OnCollisionEnter(Collision other)
+    {
+        Debug.Log("Hit");
+    }
+
 }
 
 
