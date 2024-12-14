@@ -1,8 +1,6 @@
 using System;
-
 using UnityEngine;
 using UnityEngine.UI;
-
 using FrontLineDefense.Global;
 using FrontLineDefense.Projectiles;
 using FrontLineDefense.Utils;
@@ -40,7 +38,7 @@ namespace FrontLineDefense.Player
         private void Start()
         {
             _ogHealth = _health;
-            _shootProjectile.onClick.AddListener(DropBomb);
+            // _shootProjectile.onClick.AddListener(DropBomb);
             _planeMesh = transform.GetChild(0);
             _planeMeshRotateMult = (int)PlaneRotateStatus.RIGHT;
             _customTimer = new CustomTimer();
