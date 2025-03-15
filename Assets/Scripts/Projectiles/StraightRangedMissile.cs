@@ -20,13 +20,16 @@ namespace FrontLineDefense.Projectiles
             _CurrentSpeedMult = _SpeedMult;
         }
 
-        public override void SetStats(in Vector3 initialSpeedVec)
+        public override void SetStats(in Vector3 initialSpeedVec, in bool leftAligned)
         {
             _CurrentSpeedMult = _SpeedMult;
             _turnSpeed = 1f;
             _playerTargetedPos = GameManager.Instance.PlayerTransform.position;
             // _SpeedVec = (GameManager.Instance.PlayerTransform.position - transform.position).normalized;
             _SpeedVec = initialSpeedVec;
+
+            Quaternion lookRotation = Quaternion.LookRotation(_SpeedVec, Vector3.up);
+            transform.rotation = lookRotation;
         }
 
         protected override void FixedUpdate()

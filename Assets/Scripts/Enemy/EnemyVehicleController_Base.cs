@@ -63,6 +63,10 @@ namespace FrontLineDefense.Enemy
                     Shoot();
 #endif
             }
+            else
+            {
+                _ShotProjectileStatus &= ~(1 << (int)ShootStatus.FOUND_PLAYER);
+            }
 
             //Shoot in some intervals
             // We are not looking for perfect time-interval, so this will do to reduce performance cost

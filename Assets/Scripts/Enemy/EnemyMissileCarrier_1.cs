@@ -53,7 +53,7 @@ namespace FrontLineDefense.Enemy
             GameObject shotProjectile = PoolManager.Instance.ObjectPool[(int)_missilePool].Get();
             shotProjectile.transform.position = _ShootPoint.position;
             shotProjectile.transform.rotation = _ShootPoint.rotation;
-            shotProjectile.GetComponent<ProjectileBase>().SetStats(_ShootPoint.right * -1.0f);
+            shotProjectile.GetComponent<ProjectileBase>().SetStats(_ShootPoint.right * -1.0f, false);
             shotProjectile.SetActive(true);
 
             _ShotProjectileStatus = (int)ShootStatus.RECHARGING;

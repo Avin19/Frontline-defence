@@ -346,6 +346,39 @@
 - EnemyVehilceController_Base
     (-) Using PlayerAction callback for coin collection calls also
 
+---------------------------------------------------------------------------------------------------------------------------------------
+                                                        08 Feb
+---------------------------------------------------------------------------------------------------------------------------------------
+- Scripts
+    (-) ProceduralTerrain
+        [=] Adding comments to logic
+        [=] Moving offset from global to local
+    (-) FollowingMissile
+        [=] Replacing if with clamp
+
+---------------------------------------------------------------------------------------------------------------------------------------
+                                                        09 Feb
+---------------------------------------------------------------------------------------------------------------------------------------
+- Scenes
+    (-) Changing the orientation of Missiles
+    (-) Changing the orientation of turret of the EnemyMissileCarrier
+- Scripts
+    (-) ProjectileBase
+        [=] Changing the movement logic
+        [=] Moving the orientation  logic to individual scripts
+        [=] Adding flag to store the orientation at the time of Initializing
+    (-) FollowingMissile
+        [=] The orientation logic only almost works for a stable object. For Player, the missile still loops around in a huge direction,
+            if the player changes the travelling direction
+        [=] Adding logic for left/right facing missiles
+    (-) EnemyMissileCarrier_2
+        [=] Changing logic to only shoot if straight/back facing, to avoid missile misalignment
+        [=] Changing turret orientation logic
+    (-) OriemtationTest_1
+        [=] Tessting logic for rotating the object towards the target while moving
+        [=] The object stills just orbits the target, but will do for now
+        [=] Testing more orientation logic
+
 
 =======================================================================================================================================
 - This multiplayer we can do it may be dec. I think I have completed aeroplane control. And terrain generation

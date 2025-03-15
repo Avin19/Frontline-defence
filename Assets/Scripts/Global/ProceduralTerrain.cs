@@ -1,4 +1,4 @@
-#define MESH_GENERATION_TESTING
+// #define MESH_GENERATION_TESTING
 // #define TERRAIN_DEBUG_PERLIN
 // #define TERRAIN_DEBUG_EDGES
 
@@ -24,9 +24,9 @@ namespace FrontLineDefense.Global
         // private byte[] _randomBytes;
 
         private Mesh mesh;
-        private Vector2 offset;
+        // private Vector2 offset;
         private MeshCollider meshCollider;
-        private const int zPerlinPoint = 15, zSmoothingRange = 10;
+        private const int zPerlinPoint = 15, zSmoothingRange = 10;      // zPerlinPoint cannot be constant as it depends on _zDepth
 
         public Vector3[] randomEnemyPositions;             //Debugging
         // public Vector3[] vertices;             //Debugging
@@ -41,7 +41,7 @@ namespace FrontLineDefense.Global
             // Random.InitState(seed);
 
             Random.InitState(_generatedHash.GetHashCode());
-            offset = new Vector2(Random.Range(0f, 1000f), Random.Range(0f, 1000f));
+            // offset = new Vector2(Random.Range(0f, 1000f), Random.Range(0f, 1000f));
 
             mesh = new Mesh();
             GetComponent<MeshFilter>().mesh = mesh;
@@ -98,12 +98,16 @@ namespace FrontLineDefense.Global
             int enemyPosFilled = 0, fillInterval = 10;
             Vector3[] randomEnemyPositions = new Vector3[5];
 
+            float xOffset = Random.Range(0f, 1000f);
+            float yOffset = Random.Range(0f, 1000f);
+            // offset = new Vector2(Random.Range(0f, 1000f), Random.Range(0f, 1000f));
+
             for (int z = 0, i = 0; z <= _zDepth; z++)
             {
                 for (int x = 0; x <= _xWidth; x++, i++)
                 {
                     // Calculate height using Perlin noise and the offset for a different map
-                    float y = Mathf.PerlinNoise((x + offset.x) * _scale * 0.1f, (z + offset.y) * _scale * 0.1f) * _heightMultiplier;
+                    float y = Mathf.PerlinNoise((x + xOffset) * _scale * 0.1f, (z + yOffset) * _scale * 0.1f) * _heightMultiplier;
                     vertices[i] = new Vector3(x, y, z);
                     uvs[i] = new Vector2((float)x / _xWidth, (float)z / _zDepth);
 
@@ -169,10 +173,20 @@ namespace FrontLineDefense.Global
 
             float[] perlinYPoints = new float[_xWidth + 1];
             //Generate an array of Perlin Y Points
+            // ************************************************************************************
+            //                      PART 1: Filling the middle portion of the mesh. 
+            // ************************************************************************************
+            // We are not taking the full portion of the mesh, as that will make the mesh start at a higher position 
+            // than raising from the sea
+
+            float xOffset = Random.Range(0f, 1000f);
+            float yOffset = Random.Range(0f, 1000f);
+
             // for (int x = 0; x <= xWidth; x++)
             for (int x = zSmoothingRange; x <= _xWidth - zSmoothingRange; x++)
             {
-                perlinYPoints[x] = Mathf.PerlinNoise((x + offset.x) * _scale * 0.1f, (zPerlinPoint + offset.y) * _scale * 0.1f) * _heightMultiplier;
+                perlinYPoints[x] = Mathf.PerlinNoise((x + xOffset) * _scale * 0.1f,
+                                    (zPerlinPoint + yOffset) * _scale * 0.1f) * _heightMultiplier;
 
 #if TERRAIN_DEBUG_PERLIN
                         if (printTimeZ <= xWidth)
@@ -183,6 +197,9 @@ namespace FrontLineDefense.Global
 #endif
             }
 
+            // ************************************************************************************
+            //                      PART 2: Filling the start and end of the mesh
+            // ************************************************************************************
             for (int x = 0; x < zSmoothingRange; x++)
             {
                 // Taking 10 points plus/minus and using curve to fill the points value
@@ -191,8 +208,8 @@ namespace FrontLineDefense.Global
                 // perlinYPoints[zRange - x - 1] = pointVal * heightMultiplier;
                 // perlinYPoints[xWidth - zRange + x + 1] = pointVal * heightMultiplier;
 
-                perlinYPoints[zSmoothingRange - x - 1] = Mathf.Lerp(0, perlinYPoints[zSmoothingRange], pointVal);
-                perlinYPoints[_xWidth - zSmoothingRange + x + 1] = Mathf.Lerp(0, perlinYPoints[_xWidth - zSmoothingRange], pointVal);
+                perlinYPoints[zSmoothingRange - x - 1] = Mathf.Lerp(0, perlinYPoints[zSmoothingRange], pointVal);       // Smoothing Start
+                perlinYPoints[_xWidth - zSmoothingRange + x + 1] = Mathf.Lerp(0, perlinYPoints[_xWidth - zSmoothingRange], pointVal);       // Smoothing End
 
 #if TERRAIN_DEBUG_EDGES
                 Debug.Log($"Perlin Before Points | x : {x} | val : {pointVal} | Before : {zRange - x - 1} "
@@ -200,6 +217,10 @@ namespace FrontLineDefense.Global
 #endif
             }
 
+            // ************************************************************************************
+            //                      PART 3: Smoothing the mesh at the sides
+            // ************************************************************************************
+            // We can walk through x/y co-ord regularly, 
             for (int zCoord = 0, i = 0; zCoord <= _zDepth; zCoord++)
             {
                 for (int xCoord = 0; xCoord <= _xWidth; xCoord++, i++)
@@ -228,7 +249,7 @@ namespace FrontLineDefense.Global
                     else if ((zPerlinPoint - zCoord) > 0 && (zPerlinPoint - zCoord) <= zSmoothingRange)
                     {
                         // Debug.Log($"Less than Z | z : {z}");
-                        float val = _lerpCurve.Evaluate(((zPerlinPoint - zCoord) / (float)zSmoothingRange));
+                        float val = _lerpCurve.Evaluate((zPerlinPoint - zCoord) / (float)zSmoothingRange);
                         // y = Mathf.Lerp(0, vertices[(zPoint * (xWidth + 1)) + x].y, val);              //Total xWidth+1
                         yCoord = Mathf.Lerp(0, perlinYPoints[xCoord], val);              //Total xWidth+1
 

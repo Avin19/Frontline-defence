@@ -137,7 +137,7 @@ namespace FrontLineDefense.Player
             GameObject shotProjectile = PoolManager.Instance.ObjectPool[(int)PoolManager.PoolType.BOMB].Get();
             shotProjectile.transform.position = _bombPoint.position;
             shotProjectile.transform.rotation = transform.rotation;
-            shotProjectile.GetComponent<ProjectileBase>().SetStats(transform.right * -1.0f);
+            shotProjectile.GetComponent<ProjectileBase>().SetStats(transform.right * -1.0f, false);
             shotProjectile.SetActive(true);
             // Debug.Log($"Shoot Clicked | transform.right : {transform.right} | Namer : {shotProjectile.name}");
         }

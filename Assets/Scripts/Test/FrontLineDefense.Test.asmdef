@@ -1,0 +1,16 @@
+{
+    "name": "FrontLineDefense.Test",
+    "rootNamespace": "FrontLineDefense.Test",
+    "references": [
+        "GUID:a6401abded3a85943aab5787d58d0ea9"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
